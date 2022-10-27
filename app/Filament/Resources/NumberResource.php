@@ -92,7 +92,7 @@ class NumberResource extends Resource
                             'phone' => $record->phone
                         ]))
                         ->action(static fn(Number $record, array $data) => $record->approve(...$data))
-                        ->visible(fn(Number $record) => !$record->isExpired() && !$record->isApproved() && $record->itHasAnOwner())
+                        ->visible(fn(Number $record) => !$record->isExpired() && !$record->isApproved())
                         ->requiresConfirmation()
                         ->label('Aprovar')
                         ->color('success')
@@ -106,8 +106,6 @@ class NumberResource extends Resource
                                 ->mask(static fn(Forms\Components\TextInput\Mask $mask) => $mask
                                     ->pattern('(00) 0000-00000'))
                                 ->tel()
-                                ->minLength(10)
-                                ->maxLength(11)
                                 ->label('Telefone')
                                 ->required()
                         ]),
