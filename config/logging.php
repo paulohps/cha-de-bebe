@@ -51,6 +51,12 @@ return [
     */
 
     'channels' => [
+        'heroku' => [
+            'driver' => 'errorlog',
+            'ignore_exceptions' => false,
+            'level' => env('LOG_LEVEL', 'debug')
+        ],
+
         'stack' => [
             'driver' => 'stack',
             'channels' => ['single'],
