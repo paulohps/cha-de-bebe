@@ -106,6 +106,7 @@ return [
         'path' => app_path('Filament/Pages'),
         'register' => [
             Pages\Dashboard::class,
+            \App\Filament\Pages\Profile::class
         ],
     ],
 
@@ -262,7 +263,7 @@ return [
     |
     */
 
-    'favicon' => null,
+    'favicon' => '/favicon.png',
 
     /*
     |--------------------------------------------------------------------------
