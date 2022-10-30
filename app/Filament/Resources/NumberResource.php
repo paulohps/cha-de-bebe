@@ -4,9 +4,9 @@ namespace App\Filament\Resources;
 
 use App\Models\Number;
 use Filament\{Forms, Tables};
+use Illuminate\Database\Eloquent\Collection;
 use Filament\Resources\{Form, Resource, Table};
 use App\Filament\Resources\NumberResource\Pages;
-use Illuminate\Database\Eloquent\Collection;
 
 class NumberResource extends Resource
 {
@@ -27,7 +27,13 @@ class NumberResource extends Resource
                     ->minValue(1)
                     ->unique(ignoreRecord: true)
                     ->disabled(static fn(Number $record = null) => $record?->id !== null)
-                    ->label('Número'),
+                    ->label('Número')
+                    ->required()
+                    ->columnSpan(static fn(Number $record = null) => $record?->id ? 2 : 1),
+                Forms\Components\Select::make('diaper_id')
+                    ->relationship('diaper', 'name')
+                    ->label('Fralda')
+                    ->required(),
                 Forms\Components\Select::make('approved_id')
                     ->relationship('approvedBy', 'name')
                     ->label('Aprovado por')
@@ -44,6 +50,7 @@ class NumberResource extends Resource
                 Forms\Components\Textarea::make('observations')
                     ->maxLength(500)
                     ->columnSpan(2)
+                    ->label('Observações')
             ]);
     }
 
@@ -53,6 +60,11 @@ class NumberResource extends Resource
             ->columns([
                 Tables\Columns\TextColumn::make('value')
                     ->label('número')
+                    ->searchable()
+                    ->sortable(),
+                Tables\Columns\TextColumn::make('diaper.name')
+                    ->label('fralda')
+                    ->default('---')
                     ->searchable()
                     ->sortable(),
                 Tables\Columns\TextColumn::make('approvedBy.name')
@@ -141,17 +153,10 @@ class NumberResource extends Resource
             ]);
     }
 
-    public static function getRelations(): array
-    {
-        return [
-            //
-        ];
-    }
-
     public static function getPages(): array
     {
         return [
-            'index' => Pages\ListNumbers::route('/')
+            'index' => Pages\ManageNumbers::route('/')
         ];
     }
 }

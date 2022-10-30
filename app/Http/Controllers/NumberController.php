@@ -2,12 +2,17 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Number;
 use Illuminate\Contracts\View\View;
 
 class NumberController extends Controller
 {
     public function index(): View
     {
-        return view('numbers.index');
+        $numberGroups = Number::with('diaper')
+            ->get()
+            ->groupBy('diaper.name');
+
+        return view('numbers.index', compact('numberGroups'));
     }
 }

@@ -13,6 +13,7 @@ class Number extends Model
 
     protected $fillable = [
         'approved_id',
+        'diaper_id',
         'value',
         'name',
         'phone',
@@ -25,6 +26,11 @@ class Number extends Model
         'approved_at',
         'expired_at'
     ];
+
+    public function diaper(): BelongsTo
+    {
+        return $this->belongsTo(Diaper::class);
+    }
 
     public function approvedBy(): BelongsTo
     {

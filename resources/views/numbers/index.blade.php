@@ -16,20 +16,36 @@
     @livewireStyles
     @livewireScripts
 </head>
-<body class="antialiased bg-gradient-to-r to-blue-200 from-blue-300 min-h-scree w-full">
-    <section class="flex flex-col justify-center items-center py-24 space-y-8">
-        <header>
-            <h1></h1>
-            <img class="max-w-full w-96" src="{{ asset('images/brand.png') }}" alt="Chá de fraldas">
-        </header>
+<body class="relative antialiased bg-gradient-to-r to-blue-200 from-blue-300 min-h-scree w-full">
+    <main class="pt-8 md:pt-12 pb-20">
+        <section class="w-11/12 max-w-[1024px] mx-auto h-full">
+            <header class="mb-4">
+                <img class="max-w-full w-96 mx-auto" src="{{ asset('images/brand.png') }}" alt="Chá de fraldas">
+            </header>
 
-        <div class="w-10/12 grid grid-cols-3 md:grid-cols-6 lg:grid-cols-8 place-items-center gap-6">
-            @foreach(\App\Models\Number::all() as $number)
-                <livewire:numbers.select-item :number="$number"/>
-            @endforeach
-        </div>
-    </section>
+            <div class="flex flex-col justify-center items-center space-y-6">
+                @foreach(\App\Models\Number::with('diaper')->get()->groupBy('diaper.name') as $diaperName => $numbers)
+                    <div>
+                        <div class="flex items-center mb-3">
+                            <hr class="flex-1">
+                            <p class="text-xl md:text-2xl mx-4 text-left">{{ $diaperName }}</p>
+                            <hr class="flex-1">
+                        </div>
 
+                        <div class="grid grid-cols-5 md:grid-cols-10 place-items-center gap-2 gap-y-3 md:gap-6">
+                            @foreach($numbers as $number)
+                                <livewire:numbers.select-item :number="$number"/>
+                            @endforeach
+                        </div>
+                    </div>
+                @endforeach
+            </div>
+        </section>
+    </main>
+
+    <footer class="absolute bottom-0 w-full py-3">
+        <p class="text-center text-sm">Desenvolvido com <span class="text-red-500">♥</span> por <a target="_blank" class="font-bold" href="//wa.me/5567998301453">Paulo Scheuermann</a>.</p>
+    </footer>
     @livewire('notifications')
 </body>
 </html>

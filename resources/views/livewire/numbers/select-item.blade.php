@@ -27,21 +27,22 @@
                             </svg>
                         </div>
                         <p class="text-xl md:text-2xl uppercase">Reserva realizada com sucesso, boa sorte!</p>
-                        <p class="my-8 md:text-3xl uppercase">Seu número: <strong>{{ $number->value }}</strong></p>
+                        <p class="my-8 md:text-3xl uppercase">Seu número: <strong>{{ $number->value }}</strong> - <strong>{{ $number->diaper->name }}</strong></p>
 
 
-                        <div class="flex space-x-4 w-full">
+                        <div class="flex flex-wrap md:flex-nowrap md:space-x-4 w-full">
                             <button wire:click.prevent="toggleModal" class="block font-bolder mt-4 text-center uppercase bg-danger-500 text-white w-full rounded py-3 hover:bg-danger-600 transition">
                                 Fechar
                             </button>
 
                             @if($contactPhone = config('numbers.contact_phone'))
-                                <a target="_blank" href="//wa.me/{{ $contactPhone }}?text=Olá, selecionei o número {{ $number->value }} para o chá de fraldas!" class="block font-bolder mt-4 text-center uppercase bg-yellow-400 w-full rounded py-3 hover:bg-yellow-500 transition">Enviar mensagem para confirmação</a>
+                                <a target="_blank" href="//wa.me/{{ $contactPhone }}?text=Olá, selecionei o número {{ $number->value }} para o chá de fraldas!" class="block font-bolder mt-4 text-center uppercase bg-yellow-400 w-full rounded py-3 hover:bg-yellow-500 transition">Enviar por mensagem</a>
                             @endif
                         </div>
                     </div>
                 @else
                     <p class="uppercase text-xl border-b border-gray-700/25 pb-1">Você está reservando o número: <strong>{{ $number->value }}</strong></p>
+                    <p>{{ $number->diaper->name }}</p>
 
                     <form wire:submit.prevent="save" class="mt-4 text-left">
                         {{ $this->form }}

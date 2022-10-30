@@ -1,5 +1,6 @@
 <?php
 
+use App\Models\Diaper;
 use App\Models\User;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
@@ -12,6 +13,7 @@ return new class extends Migration {
         Schema::create('numbers', static function (Blueprint $table) {
             $table->id();
             $table->foreignIdFor(User::class, 'approved_id')->nullable()->constrained('users');
+            $table->foreignIdFor(Diaper::class, 'diaper_id')->nullable()->constrained();
             $table->integer('value');
             $table->string('name')->nullable();
             $table->string('phone')->nullable();
