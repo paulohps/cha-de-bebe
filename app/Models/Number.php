@@ -85,6 +85,12 @@ class Number extends Model
         return $this->name && $this->phone;
     }
 
+    public function isReserved(): bool
+    {
+        return (!$this->expired_at || $this->expired_at->greaterThan(now()))
+            && ($this->name || $this->phone);
+    }
+
     public static function makeExpiredAt(): Carbon
     {
         return now()->addMinutes(config('numbers.expire_at_minutes'));

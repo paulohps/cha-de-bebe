@@ -74,10 +74,6 @@ class NumberResource extends Resource
                 Tables\Columns\TextColumn::make('approved_at')
                     ->dateTime()
                     ->label('aprovado em')
-                    ->sortable(),
-                Tables\Columns\TextColumn::make('expired_at')
-                    ->dateTime()
-                    ->label('expira em')
                     ->sortable()
             ])
             ->filters([

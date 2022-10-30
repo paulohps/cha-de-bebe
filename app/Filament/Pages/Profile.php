@@ -2,6 +2,7 @@
 
 namespace App\Filament\Pages;
 
+use App\Models\User;
 use Filament\Pages\Page;
 use Filament\Forms\Concerns\InteractsWithForms;
 use Filament\Forms\Components\{Grid, Section, TextInput};
@@ -16,12 +17,6 @@ class Profile extends Page
     protected static string $view = 'filament.pages.profile';
     protected static ?string $slug = 'perfil';
 
-    public string $name;
-    public string $email;
-    public ?string $currentPassword = null;
-    public ?string $newPassword = null;
-    public ?string $newPasswordConfirmation = null;
-
     public function mount(): void
     {
         $this->form->fill([
@@ -32,13 +27,29 @@ class Profile extends Page
 
     public function submit(): void
     {
-        $user = auth()->user()->update($this->form->validate());
+        $validated = $this->form->validate();
 
-        if ($this->newPassword) {
-            session()->put(['password_hash_' . auth()->getDefaultDriver() => $user->getAuthPassword()]);
+        $data = [
+            'name' => $validated['name'],
+            'email' => $validated['email']
+        ];
+
+        if ($validated['new_password']) {
+            $data['password'] = bcrypt($validated['new_password']);
         }
 
-        $this->reset(['currentPassword', 'newPassword', 'newPasswordConfirmation']);
+        /** @var User $user */
+        $user = auth()->user();
+
+        $user->update($data);
+
+        if ($validated['new_password']) {
+            session()->invalidate();
+            session()->regenerateToken();
+            $this->redirectRoute('filament.auth.login');
+            return;
+        }
+
         $this->notify('success', 'Perfil atualizado com sucesso!');
     }
 
@@ -59,7 +70,7 @@ class Profile extends Page
             Section::make('Atualizar Senha')
                 ->columns(2)
                 ->schema([
-                    TextInput::make('currentPassword')
+                    TextInput::make('current_password')
                         ->label('Senha Atual')
                         ->password()
                         ->requiredWith('newPassword')
@@ -68,15 +79,15 @@ class Profile extends Page
                         ->columnSpan(1),
                     Grid::make()
                         ->schema([
-                            TextInput::make('newPassword')
+                            TextInput::make('new_password')
                                 ->label('Nova Senha')
                                 ->password()
                                 ->confirmed()
                                 ->autocomplete('new-password'),
-                            TextInput::make('newPasswordConfirmation')
+                            TextInput::make('new_password_confirmation')
                                 ->label('Confirme a nova senha')
                                 ->password()
-                                ->requiredWith('newPassword')
+                                ->requiredWith('new_password')
                                 ->autocomplete('new-password'),
                         ]),
                 ]),

@@ -4,11 +4,11 @@
 
         <div class="flex flex-wrap items-center gap-4 justify-start">
             <x-filament::button type="submit">
-                Save
+                Salvar
             </x-filament::button>
 
             <x-filament::button type="button" color="secondary" tag="a" :href="\Filament\Pages\Dashboard::getUrl()">
-                Cancel
+                Cancelar
             </x-filament::button>
         </div>
     </form>
