@@ -53,4 +53,11 @@ class ManageNumbers extends ManageRecords
             Actions\CreateAction::make()
         ];
     }
+
+    public function getHeaderWidgets(): array
+    {
+        return [
+            NumberResource\Widgets\CountersOverview::class
+        ];
+    }
 }
