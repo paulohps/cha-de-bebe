@@ -19,3 +19,14 @@ if (!function_exists('mask')) {
         return $masked;
     }
 }
+
+if (!function_exists('unmask')) {
+    function unmask(string $value, array $characters): string
+    {
+        if (empty($value)) {
+            return '';
+        }
+
+        return str_replace($characters, '', $value);
+    }
+}

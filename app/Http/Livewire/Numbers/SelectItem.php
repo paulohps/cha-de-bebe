@@ -3,14 +3,14 @@
 namespace App\Http\Livewire\Numbers;
 
 use App\Models\Number;
-use Illuminate\Support\Str;
 use Livewire\Component;
+use Illuminate\Support\Str;
 use Illuminate\Contracts\View\View;
 use Filament\Forms\Contracts\HasForms;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\TextInput\Mask;
+use Illuminate\Validation\ValidationException;
 use Filament\Forms\Concerns\InteractsWithForms;
-use AbanoubNassem\FilamentGRecaptchaField\Forms\Components\GRecaptcha;
 
 class SelectItem extends Component implements HasForms
 {
@@ -39,9 +39,12 @@ class SelectItem extends Component implements HasForms
         $this->showModal = $newValue ?? !$this->showModal;
     }
 
+    /**
+     * @throws ValidationException
+     */
     public function save(): void
     {
-        $this->validate(messages: ['phone' => 'Telefone inválido!'], attributes: ['captcha' => 'Não sou robô']);
+        $this->validate(messages: ['phone' => 'Telefone inválido, formatos válidos: (00) 0000-00000, 00000000000']);
 
         $this->number->update([
             'name' => Str::title($this->name),
@@ -62,13 +65,9 @@ class SelectItem extends Component implements HasForms
             TextInput::make('phone')
                 ->mask(static fn(Mask $mask) => $mask
                     ->pattern('(00) 0000-00000'))
-                ->tel()
                 ->rules(['min_digits:10', 'max_digits:11'])
                 ->label('Qual o seu whatsapp?')
-                ->required(),
-            //GRecaptcha::make('captcha')
-            //    ->validationAttribute('Não sou robô')
-            //    ->required()
+                ->required()
         ];
     }
 }
