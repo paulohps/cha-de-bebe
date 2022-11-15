@@ -11,6 +11,7 @@ use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\TextInput\Mask;
 use Illuminate\Validation\ValidationException;
 use Filament\Forms\Concerns\InteractsWithForms;
+use Throwable;
 
 class SelectItem extends Component implements HasForms
 {
@@ -40,15 +41,21 @@ class SelectItem extends Component implements HasForms
     }
 
     /**
-     * @throws ValidationException
+     * @throws Throwable|ValidationException
      */
     public function save(): void
     {
         $this->validate(messages: ['phone' => 'Telefone inválido, formatos válidos: (00) 0000-00000, 00000000000']);
 
+        $phone = unmask($this->phone, ['(', ')', '-', ' ', '+']);
+
+        throw_if(strlen($phone) < 10 || strlen($phone) > 11, ValidationException::withMessages([
+            'phone' => 'Telefone inválido, informe seu número com DDD.'
+        ]));
+
         $this->number->update([
             'name' => Str::title($this->name),
-            'phone' => $this->phone
+            'phone' => unmask($this->phone, ['(', ')', '-', ' ', '+'])
         ]);
 
         $this->isSuccess = true;
@@ -65,7 +72,6 @@ class SelectItem extends Component implements HasForms
             TextInput::make('phone')
                 ->mask(static fn(Mask $mask) => $mask
                     ->pattern('(00) 0000-00000'))
-                ->rules(['min_digits:10', 'max_digits:11'])
                 ->label('Qual o seu whatsapp?')
                 ->required()
         ];

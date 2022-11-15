@@ -24,7 +24,7 @@
             </header>
 
             <div class="flex flex-col justify-center items-center space-y-6">
-                @foreach(\App\Models\Number::with('diaper')->get()->groupBy('diaper.name') as $diaperName => $numbers)
+                @foreach($numberGroups as $diaperName => $numbers)
                     <div>
                         <div class="flex items-center mb-3">
                             <hr class="flex-1">
